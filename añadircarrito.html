@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Squoosh/dibujo.svg" type="image/x-icon">
+    <title>Tienda de Robots</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, rgb(190, 184, 184), rgb(28, 154, 177));
+            
+        }
+
+        *{
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 20px;
+            margin: 0%;
+            padding: 0%;
+        }
+
+        /* Estilos para las sugerencias */
+        .suggestions-list {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+        /* Estilo para la notificación de añadido */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        #logo {
+            width: 70px;
+            height: 90px;
+            filter: drop-shadow(2px 2px 10px rgb(64, 100, 117));
+        }
+        .navbar{
+            background: linear-gradient(to right, rgb(26, 206, 219), rgb(103, 112, 112));
+            height: 120px;
+        }
+
+        .nav-link{
+            box-shadow: 0 0 10px black;
+            background: rgb(101, 211, 238);
+            margin: 5px;
+            border-radius: 8px;
+            color: rgb(248, 248, 248);
+            font-size: 20px;
+            a{
+                text-shadow: 0 0 10px black,
+                            0 0 20px black,
+                            0 0 30px black,
+                            0 0 40px black;
+            }
+        }
+
+        .card{
+            box-shadow: 0 0 10px black;
+        }
+
+        .btn{
+            box-shadow: 0 0 10px black;
+            background-color: rgb(241, 241, 241);
+            border-color: transparent;
+            color: black;
+        }
+
+        #searchInput{
+            box-shadow: 0 0 5px black;
+        }
+
+        .btn:hover{
+            background-color: rgb(0, 0, 0);
+            color: rgb(248, 248, 248);
+            border-color: transparent;
+            transition: all 0.6s ease;
+        }
+
+        .card-body{
+            background: linear-gradient(to right, rgb(224, 20, 180), rgb(213, 51, 51));
+            color: #f0f0f0;
+        }
+
+        .btn1{
+            margin: 4px;
+            border-radius: 9px;
+            background-color: rgb(241, 241, 241);
+            box-shadow: 0 0 10px black;
+            border-color: transparent;
+        }
+
+        .btn1:hover{
+            background-color: rgb(0, 0, 0);
+            color: rgb(248, 248, 248);
+            border-color: transparent;
+            transition: all 0.6s ease;
+        }
+
+        .modal-footer{
+            background: linear-gradient(to right, rgb(0, 0, 0), rgb(255, 255, 255));
+            box-shadow: 0 0 10px black;
+            margin-bottom: 0%;
+            padding-bottom: 0%;
+        }
+
+        .card-img-top{
+            height: 250px;
+            filter: drop-shadow(2px 2px 10px rgb(64, 100, 117));
+        }
+
+        .redes{
+            img{
+                height: 37px;
+                margin: 5px;
+
+            }
+
+            img:hover{
+                height: 43px;
+            }
+        }
+
+        .page-link{
+            color: black;
+            
+        }
+
+        .page-item{
+            box-shadow: 0 0 10px black;
+        }
+        
+
+    </style>
+</head>
+<body>
+
+    <!-- Header con menú de hamburguesa -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <img src="/Squoosh/dibujo.svg" alt="Logo de la tienda de Robots" id="logo">
+            <a class="navbar-brand" href="#">IronBot</a>          
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                    <!-- Añadimos un botón para ver el carrito -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">Carrito <span id="cartCount" class="badge bg-secondary">0</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sección de productos -->
+    <section class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-4 d-flex justify-content-center">Elige tu mejor compañero</h2>
+                <!-- Barra de búsqueda con autocompletado -->
+                <div class="input-group mb-3 position-relative">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar robot" aria-label="Buscar coches">
+                    <button class="btn btn-outline-secondary" type="button" id="searchButton">Buscar</button>
+                    <!-- Lista de sugerencias -->
+                    <div class="suggestions-list" id="suggestionsList" style="display: none; margin-top: 40px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="productList">
+            <!-- Los productos (coches) se generarán dinámicamente -->
+        </div>
+    </section>
+
+    <!-- Modal para mostrar el carrito -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Carrito de Compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí se mostrarán los productos añadidos al carrito -->
+                    <ul id="cartItems" class="list-group">
+                        <!-- Productos del carrito -->
+                    </ul>
+                    <div class="mt-3">
+                        <strong>Total: €<span id="cartTotal">0.00</span></strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Finalizar compra</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast para notificación de producto añadido -->
+    <div class="toast" id="productAddedToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notificación</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Producto añadido al carrito.
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation example"> 
+        <ul class="pagination d-flex flex-row justify-content-center"> 
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li> 
+            <li class="page-item"><a class="page-link" href="#">1</a></li> 
+            <li class="page-item"><a class="page-link" href="#">2</a></li> 
+            <li class="page-item"><a class="page-link" href="#">3</a></li> 
+            <li class="page-item"><a class="page-link" href="#">Next</a></li> 
+        </ul> 
+    </nav> 
+
+    <div class="modal-footer d-flex justify-content-center">
+            <p>Todos los derechos reservados</p>
+            <div class="redes"><img src="Squoosh/instagram.webp" alt="Instagram"></div>
+            <div class="redes"><img src="Squoosh/facebook.webp" alt="Facebook"></div>
+            <div class="redes"><img src="Squoosh/Tuwiter.webp" alt="Twitter"></div>
+    </div>
+
+    <!-- Bootstrap JS y Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para el buscador con recomendaciones y gestión del carrito -->
+    <script>
+        // Lista de productos (coches) con sus nombres y precios
+        const products = [
+            { name: "Androide888", price: 2700, logo: "Squoosh/Androide.webp"},
+            { name: "BB7", price: 1975, logo: "Squoosh/bb7.webp" },
+            { name: "Boto", price: 2512, logo: "Squoosh/Boto.webp" },
+            { name: "Devil", price: 1499, logo: "Squoosh/devil.webp" },
+            { name: "Eva", price: 4236, logo: "Squoosh/eva.webp" },
+            { name: "Magno", price: 3080, logo: "Squoosh/Magno.webp" },
+            { name: "Motor", price: 2325, logo: "Squoosh/Motor.webp" },
+            { name: "Silk", price: 3098, logo: "Squoosh/Silk.webp" },
+            { name: "Visor", price: 4190, logo: "Squoosh/Visor.webp" },
+            { name: "Walle", price: 4104, logo: "Squoosh/Walle.webp" },
+        ];
+
+        // Carrito de compras, con clave el nombre del producto y valor la cantidad y precio
+        let cart = {};
+
+        // Referencias a los elementos del DOM que vamos a manipular
+        const searchInput = document.getElementById('searchInput'); // Input de búsqueda
+        const suggestionsList = document.getElementById('suggestionsList'); // Lista de sugerencias en el buscador
+        const cartItemsList = document.getElementById('cartItems'); // Lista de productos en el carrito
+        const cartCount = document.getElementById('cartCount'); // Contador de productos en el carrito
+        const cartTotal = document.getElementById('cartTotal'); // Total del carrito
+        const toastElement = new bootstrap.Toast(document.getElementById('productAddedToast')); // Toast de producto añadido
+
+        // Función para mostrar los productos en la página
+        function displayProducts(productsToDisplay) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = ''; // Limpiar productos previos
+            productsToDisplay.forEach(product => {
+                const productCard = document.createElement('div'); // Crear una tarjeta para cada coche
+                productCard.classList.add('col-md-4', 'col-lg-3', 'col-sm-6', 'mb-4', 'product-item'); // Añadimos clases de Bootstrap
+
+                // Añadimos contenido a la tarjeta del producto
+                productCard.innerHTML = `
+                    <div class="card">
+                        <img src="${product.logo}" class="card-img-top" alt="${product.name}" loading="lazy">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text">Precio: €${product.price.toLocaleString()}</p>
+                            <button class="btn btn-primary addToCart" data-product="${product.name}" data-price="${product.price} list-group-item">Añadir al carrito</button>
+                        </div>
+                    </div>
+                `;
+                productList.appendChild(productCard); // Añadimos la tarjeta al contenedor
+            });
+        }
+
+        // Mostrar todos los productos al cargar la página
+        displayProducts(products);
+
+        // Búsqueda de productos con autocompletado
+        searchInput.addEventListener('input', function() {
+            const searchQuery = this.value.toLowerCase();
+            suggestionsList.innerHTML = ''; // Limpiar sugerencias anteriores
+
+            // Filtrar productos que coincidan con el texto
+            const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchQuery));
+
+            if (filteredProducts.length > 0) {
+                filteredProducts.forEach(product => {
+                    const suggestionItem = document.createElement('div');
+                    suggestionItem.classList.add('suggestion-item');
+                    suggestionItem.textContent = product.name;
+
+                    // Seleccionar sugerencia al hacer clic
+                    suggestionItem.addEventListener('click', function() {
+                        searchInput.value = product.name; // Rellenar el campo de búsqueda
+                        suggestionsList.innerHTML = ''; // Limpiar sugerencias
+                        displayProducts(filteredProducts); // Mostrar productos filtrados
+                    });
+
+                    suggestionsList.appendChild(suggestionItem); // Añadir la sugerencia a la lista
+                });
+                suggestionsList.style.display = 'block'; // Mostrar la lista
+            } else {
+                suggestionsList.style.display = 'none'; // Ocultar si no hay coincidencias
+            }
+        });
+
+        // Mostrar productos al hacer clic en el botón "Buscar"
+        document.getElementById('searchButton').addEventListener('click', function() {
+            const searchQuery = searchInput.value.toLowerCase();
+            const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchQuery));
+            displayProducts(filteredProducts); // Mostrar productos filtrados
+        });
+
+        // Añadir producto al carrito
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('addToCart')) {
+                const productName = event.target.getAttribute('data-product'); // Obtener el nombre del producto
+                const productPrice = parseFloat(event.target.getAttribute('data-price')); // Obtener el precio
+
+                // Si ya está en el carrito, incrementar la cantidad
+                if (cart[productName]) {
+                    cart[productName].quantity++;
+                } else {
+                    cart[productName] = { quantity: 1, price: productPrice }; // Añadir al carrito si no existe
+                }
+
+                toastElement.show(); // Mostrar notificación de añadido
+
+                updateCartCount(); // Actualizar el contador del carrito
+                updateCartList(); // Actualizar la lista del carrito
+            }
+        });
+
+        // Actualizar el contador de productos en el carrito
+        function updateCartCount() {
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        // Actualizar la lista del carrito
+        function updateCartList() {
+            cartItemsList.innerHTML = ''; // Limpiar la lista
+
+            let total = 0;
+            for (const product in cart) {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+
+                // Calcular el precio total del producto
+                const itemTotalPrice = cart[product].price * cart[product].quantity;
+                total += itemTotalPrice;
+
+                listItem.textContent = `${product} - Cantidad: ${cart[product].quantity} - Total: €${itemTotalPrice.toLocaleString()}`;
+
+                // Botón para eliminar una unidad del producto
+                const removeButton = document.createElement('button');
+                removeButton.classList.add('btn1', 'btn-warning', 'btn-sm');
+                removeButton.textContent = 'Eliminar 1';
+
+                // Evento para eliminar 1 unidad del carrito
+                removeButton.addEventListener('click', function() {
+                    if (cart[product].quantity > 1) {
+                        cart[product].quantity--;
+                    } else {
+                        delete cart[product];
+                    }
+
+                    updateCartList(); // Actualizar la lista
+                    updateCartCount(); // Actualizar el contador
+                });
+
+                // Botón para eliminar todo el producto del carrito
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('btn1', 'btn-danger', 'btn-sm');
+                deleteButton.textContent = 'Eliminar todo';
+
+                // Evento para eliminar todo el producto
+                deleteButton.addEventListener('click', function() {
+                    delete cart[product];
+                    updateCartList(); // Actualizar la lista
+                    updateCartCount(); // Actualizar el contador
+                });
+
+                // Añadir botones a la lista
+                listItem.appendChild(removeButton);
+                listItem.appendChild(deleteButton);
+                cartItemsList.appendChild(listItem); // Añadir el producto a la lista
+
+            }
+
+            // Mostrar el total
+            cartTotal.textContent = total.toLocaleString();
+        }
+    </script>
+</body>
+</html>

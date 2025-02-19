@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda de Robots</title>
+    <link rel="icon" href="Squoosh/dibujo.svg" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, rgb(190, 184, 184), rgb(28, 154, 177));
+        }
+
+        *{
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 20px;
+            margin: 0%;
+            padding: 0%;
+        }
+
+        /* Estilos para las sugerencias */
+        .suggestions-list {
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: 100%;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+        /* Estilo para la notificación de añadido */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+
+        #logo {
+            width: 70px;
+            height: 90px;
+            filter: drop-shadow(2px 2px 10px rgb(64, 100, 117));
+        }
+        .navbar{
+            background: linear-gradient(to right, rgb(26, 206, 219), rgb(103, 112, 112));
+            height: 120px;
+        }
+
+        .nav-link{
+            box-shadow: 0 0 10px black;
+            background: rgb(101, 211, 238);
+            margin: 5px;
+            border-radius: 8px;
+            color: rgb(248, 248, 248);
+            font-size: 20px;
+            a{
+                text-shadow: 0 0 10px black,
+                            0 0 20px black,
+                            0 0 30px black,
+                            0 0 40px black;
+            }
+        }
+
+        .redes{
+            img{
+                height: 37px;
+                margin: 5px;
+
+            }
+
+            img:hover{
+                height: 43px;
+            }
+        }
+
+        .modal-footer{
+            background: linear-gradient(to right, rgb(0, 0, 0), rgb(255, 255, 255));
+            box-shadow: 0 0 10px black;
+        }
+
+        .btn{
+            box-shadow: 0 0 10px black;
+            background-color: rgb(241, 241, 241);
+            border-color: transparent;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .btn:hover{
+            background-color: rgb(0, 0, 0);
+            color: rgb(248, 248, 248);
+            border-color: transparent;
+            transition: all 0.6s ease;
+        }
+
+        .accordion{
+            width: 80%;
+            margin-left: 10%;
+            margin-bottom: 70px;
+            margin-top: 27px;
+            box-shadow: 0 0 10px black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header con menú de hamburguesa -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <img src="/Squoosh/dibujo.svg" alt="Logo de la tienda de Robots" id="logo">
+            <a class="navbar-brand" href="#">IronBot</a>          
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="añadircarrito.html">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Contacto</a>
+                    </li>
+                    <!-- Añadimos un botón para ver el carrito -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">Carrito <span id="cartCount" class="badge bg-secondary">0</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+                        <label for="exampleInputEmail1" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        
+                        <label for="exampleInputEmail1" class="form-label">Mensaje</label>
+
+                        <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></textarea>
+
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </div>
+                        
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion" id="accordionExample"> 
+        <div class="accordion-item"> 
+            <h2 class="accordion-header" id="headingOne"> 
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> 
+                    ¿Cuál es el mejor robot que han hecho?
+                </button> 
+            </h2> 
+            <div id="collapseOne" class="accordion-collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample"> 
+                <div class="accordion-body"> 
+                    El mejor robot que hemos hecho es Eva y Visor, ya que, tienen propiedades extraordinarias como flotar y zoom. 
+                </div> 
+            </div> 
+        </div> 
+        <div class="accordion-item"> 
+            <h2 class="accordion-header" id="headingTwo"> 
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> 
+                    ¿Cómo empezamos la idea?
+                </button> 
+            </h2> 
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample"> 
+                <div class="accordion-body"> 
+                    Porque de pequeños a todos los del grupo nos gustaban lor robots y este tipo de cosas, por esta razón hemos querido llevarlo todo a otro nivel. 
+                </div> 
+            </div> 
+        </div> 
+        <div class="accordion-item"> 
+            <h2 class="accordion-header" id="headingThree"> 
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> 
+                    ¿Son duraderos los robots?
+                </button> 
+            </h2> 
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample"> 
+                <div class="accordion-body"> 
+                    Estan implementados con una tecnología hecha para la duración, además del material que es súper resistente, también son contra el agua y se pueden cargar o usar con una batería. 
+                </div> 
+            </div> 
+        </div> 
+    </div>
+
+
+    <div class="modal-footer d-flex justify-content-center">
+        <p>Todos los derechos reservados</p>
+        <div class="redes"><img src="Squoosh/instagram.webp" alt="Instagram"></div>
+        <div class="redes"><img src="Squoosh/facebook.webp" alt="Facebook"></div>
+        <div class="redes"><img src="Squoosh/Tuwiter.webp" alt="Twitter"></div>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
